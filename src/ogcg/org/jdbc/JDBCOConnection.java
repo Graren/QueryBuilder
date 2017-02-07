@@ -13,6 +13,7 @@ public class JDBCOConnection {
 	private String password;
 	private String host;
 	private Connection conn ;
+	private QueryExecutor exe;
 	
 	JDBCOConnection (Integer port, String dbName, String user, String password, String host) {
 		this.setPort(port);
@@ -28,8 +29,8 @@ public class JDBCOConnection {
 		try {
 			Class.forName("org.postgresql.Driver");
 			conn = DriverManager
-					.getConnection("jdbc:postgresql://localhost:5432/people",
-							"postgres", "hcacogcg");
+					.getConnection("jdbc:postgresql://"+ this.host + ":" +this.port +"/" + this.dbName,
+							this.user, this.password);
 			this.conn = conn;
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -50,10 +51,11 @@ public class JDBCOConnection {
 		return a;
 	}
 	
-	public ResultSet executeQuery(){
-		return null;
+	public QueryExecutor Query(){
+		QueryExecutor exe = new QueryExecutor(this.getConn());
+		this.exe = exe;
+		return exe;
 	}
-	
 	/**
 	 * @return the host
 	 */
@@ -127,7 +129,7 @@ public class JDBCOConnection {
 	/**
 	 * @return the conn
 	 */
-	public Connection getConn() {
+	private Connection getConn() {
 		return conn;
 	}
 
